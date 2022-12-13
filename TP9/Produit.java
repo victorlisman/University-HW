@@ -1,24 +1,22 @@
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 public class Produit
 {
-    private int code = 0;
+    public int code = 0;
     private double prix;
-    private GregorianCalendar date = new GregorianCalendar();
+    private LocalDate date;
     private int perValidite;
     private String categorie;
 
-    //constructeur
-    public Produit(double prix, GregorianCalendar date, int perValidite, String categorie)
+    public Produit(int code, double prix, LocalDate date, int perValidite, String categorie)
     {
-        this.code++;
+        this.code = code;
         this.prix = prix;
         this.date = date;
         this.perValidite = perValidite;
         this.categorie = categorie;
     }
 
-    //getters and setter
     public int getCode()
     {
         return code;
@@ -39,12 +37,12 @@ public class Produit
         this.prix = prix;
     }
 
-    public GregorianCalendar getDate()
+    public LocalDate getDate()
     {
         return date;
     }
 
-    public void setDate(GregorianCalendar date)
+    public void setDate(LocalDate date)
     {
         this.date = date;
     }
@@ -69,5 +67,11 @@ public class Produit
         this.categorie = categorie;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Produit [code=" + code + ", prix=" + prix + ", date=" + date + ", perValidite=" + perValidite
+                + ", categorie=" + categorie + "]";
+    }
 
 }

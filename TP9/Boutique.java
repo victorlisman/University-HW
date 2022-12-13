@@ -1,26 +1,26 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Boutique 
 {
-    ArrayList<Produit> produits = new ArrayList<Produit>();
+    private ArrayList<Produit> produits = new ArrayList<Produit>();
 
-    void ajouterProduit(Produit p)
+    public void ajouterProduit(Produit p)
     {
         produits.add(p);
     }
 
-    void effacerProduit(Produit p)
+    public void effacerProduit(int index)
     {
         for (Produit i : produits)
-            if (i.getCode() == p.getCode())
+            if (produits.indexOf(i) == index)
             {
                 produits.remove(i);
                 break;
             }
     }
 
-    void modifierPrix(Produit p, double prix)
+    public void modifierPrix(Produit p, double prix)
     {
         for (Produit i : produits)
             if (i.getCode() == p.getCode())
@@ -30,39 +30,40 @@ public class Boutique
             }
     }
 
-    void afficherProduits(String categorie)
+    public void afficherProduits(String categorie)
     {
         for (Produit i : produits)
             if (i.getCategorie().equals(categorie))
-                System.out.println(i);
+                System.out.println(i.toString());
     }
 
-    void produitPerimes()
+    public void produitPerimes()
     {
         for (Produit i : produits)
-            if (i.getPerValidite() + i.getDate().get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR))
-                System.out.println(i);
+            if (i.getDate().getYear() + i.getPerValidite() < LocalDate.now().getYear())
+                System.out.println(i.toString());
     }
 
-    void produitMoinsCher()
+    public void produitMoinsCher()
     {
         Produit p = produits.get(0);
         for (Produit i : produits)
             if (i.getPrix() < p.getPrix())
                 p = i;
-        System.out.println(p);
+        System.out.println(p.toString());
     }
 
-    double prixMoyen()
+    public double prixMoyen()
     {
         double prix = 0;
         int nb = 0;
         for (Produit i : produits)
-            if (i.getDate().get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR) - 3)
+            if (i.getDate().isAfter(LocalDate.of(2019, 1, 1)))
             {
                 prix += i.getPrix();
                 nb++;
             }
+
         return prix / nb;
     }
 
