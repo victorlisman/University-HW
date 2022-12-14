@@ -188,6 +188,8 @@ public class TP4mod
             for (int j = 0; j < n; j++)
                 a[i][j] = sc.nextInt();
 
+        sc.close();
+
     }
 
     public static int[][] multiplyMatrix(int a[][], int b[][], int n, int m)
