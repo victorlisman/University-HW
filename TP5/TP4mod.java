@@ -5,7 +5,7 @@ public class TP4mod
 {
     public static void main(String[] args) 
     {
-        TP4mod d = new Dev4();
+        TP4mod d = new TP4mod();
 
         //d.Ex1(2);
         //d.Ex2();
