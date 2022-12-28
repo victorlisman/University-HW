@@ -56,7 +56,8 @@ public class Loan
         this.unpaidSum = unpaidSum;
     }
 
-    //compute instalment
-    
-
+    public double getInstallment()
+    {
+        return this.installment;
+    }
 }
