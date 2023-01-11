@@ -4,7 +4,7 @@ public class TP4
 {
     public static void main(String[] args) 
     {
-        TP4 d = new Dev4();
+        TP4 d = new TP4();
 
         d.Ex1(2);
         d.Ex2();
