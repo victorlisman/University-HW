@@ -10,13 +10,18 @@ public class CarteVideo extends HardwareProduit {
         super.setNote(note);;
     }
 
-    public void calculerPriceLei()
+    public void calculerPrixLei()
     {
-
+        this.monnaie = (long) (super.getMonnaiePrix() * 4.8);
     }
 
     public void calculerPerformance()
     {
+        super.setPerformance(super.getNote() * 100);
+    }
 
+    @Override
+    public String toString() {
+        return "CarteVideo{" + "monnaie=" + monnaie + ", maximumNote=" + maximumNote + '}';
     }
 }

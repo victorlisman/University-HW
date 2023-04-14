@@ -1,26 +1,19 @@
 package TP12;
 
-public class HardwareProduit {
+abstract public class HardwareProduit {
     private double monnaiePrix;
     private double leiPrix;
     private double note;
     private double performance;
     
-    public void calculerPerformance() {
-        // TODO
-    }
+    abstract public void calculerPerformance();
 
     public double calculerRapportLeiPrixPerformance() {
-        // TODO
-        return 0;
+        return this.leiPrix / this.performance;
     }
     
-    public void calculerPrixLei()
-    {
-
-    }
+    abstract public void calculerPrixLei();
     
-    //setters
     public void setMonnaiePrix(double monnaiePrix) {
         this.monnaiePrix = monnaiePrix;
     }
@@ -37,7 +30,6 @@ public class HardwareProduit {
         this.performance = performance;
     }
 
-    //getters
     public double getMonnaiePrix() {
         return monnaiePrix;
     }
