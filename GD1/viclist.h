@@ -1,312 +1,143 @@
 #include <iostream>
-#include <array>
+
+using std::cout;
+using std::cin;
 
 namespace vic {
-template<typename T>
+template <typename T>
 struct node
 {
-    T m_info;
-    node<T>* m_next;
-    node<T>* m_prev;
+    T data;
+    node<T> *next;
 
-    bool operator==(const node<T>& other) const
+    //operator overloading ==
+    bool operator==(const node<T> &other)
     {
-        return m_info == other.m_info;
+        return data == other.data;
     }
 };
 
-template<typename T>
+template <typename T>
 class list
 {
 private:
-    node<T>* m_head;
-    node<T>* m_tail;
-    size_t m_size;
+    node<T> *m_tail;
+    node<T> *m_head;
 
 public:
-    list(): m_size(0), m_head(nullptr), m_tail(nullptr) {}
-
-    ~list()
+    list()
     {
-        while (m_head != nullptr)
-        {
-            node<T>* aux = m_head;
-            m_head = m_head->m_next;
-            delete aux;
-        }
+        m_tail = NULL;
+        m_head = NULL;
     }
 
-    void addFirst(T x)
+    int size()
     {
-
-        node<T> *aux = new node<T>;
-
-        aux->m_info = x;
-        aux->m_prev = NULL;
-        aux->m_next = m_tail;
-
-        if (m_tail != NULL)
-            m_tail->m_prev = aux;
-
-        m_tail = aux; 
-
-        
-        if (m_head == NULL)
-            m_head = m_tail;
-
-        m_size++;
-    }
-
-    void addLast(T x)
-    {
-
-        node<T> *aux = new node<T>;
-
-        aux->m_info = x;
-        aux->m_prev = m_head;
-        aux->m_next = NULL;
-
-        if (m_tail != NULL)
-            m_tail->m_next = aux;
-
-        m_tail = aux;
-
-        if (m_tail == NULL)
-            m_tail = m_head;
-
-        m_size++;
-    }
-
-    T getInfo (node<T>* p)
-    {
-        return p->m_info;
-    }
-
-    void removeFirst()
-    {
-        node<T>* aux;
-
-        if (m_tail != NULL)
-        {
-            aux = m_tail->m_next;
-
-            if (m_tail == m_head)
-                m_head = NULL;
-
-            delete m_tail;
-
-            m_tail = aux;
-
-            if (m_tail != NULL)
-                m_tail->m_prev = NULL;
-
-            m_size--;
-        }
-        else throw "The list is empty";
-    }
-
-    void removeLast()
-    {
-        node<T> *aux;
-
-        if (m_head != NULL)
-        {
-            aux = m_head->m_prev;
-
-            if (m_tail == m_head)
-                m_tail = NULL;
-
-            delete m_head;
-
-            m_head = aux;
-            if (m_head != NULL)
-                m_head->m_next = NULL;
-
-            m_size--;
-        }
-        else throw "The list is empty";
-    }
-
-    
-    node<T>* findFirstOccurrence(T x)
-    {
-
-        node<T> *aux;
-
-        aux = m_tail;
+        int count = 0;
+        node<T> *aux = m_tail;
 
         while (aux != NULL)
         {
-            if (aux->m_info == x)
-                return aux;
-            aux = aux->m_next;
-        }
-        return NULL;
-    }
-
-    node<T>* findLastOccurrence(T x)
-    {
-        node<T> *aux;
-
-        aux = m_head;
-        while (aux != NULL) {
-            if (aux->m_info == x)
-                return aux;
-            aux = aux->m_prev;
+            count++;
+            aux = aux->next;
         }
 
-        return NULL;
+        return count;
     }
 
-    void removeFirstOccurrence(T x)
+    //insertfront
+    void addFirst(T x)
     {
-        node<T> *px;
+        node<T> *aux = new node<T>;
 
-        px = findFirstOccurrence(x); 
+        aux->data = x;
+        aux->next = m_tail;
+        m_tail = aux;
+    }
 
-        if (px != NULL)
+    //insertback
+    void addLast(T x)
+    {
+        node<T> *aux = new node<T>;
+
+        aux->data = x;
+        aux->next = NULL;
+
+        if (m_tail == NULL)
+            m_tail = aux;
+        else
         {
-            if (px->m_prev != NULL)
-                px->m_prev->m_next = px->m_next;
+            node<T> *aux2 = m_tail;
 
-            if (px->m_next != NULL)
-                px->m_next->m_prev = px->m_prev;
+            while (aux2->next != NULL)
+                aux2 = aux2->next;
 
-            if (px->m_prev == NULL)
-                m_tail = px->m_next;
-
-            if (px->m_next == NULL)
-                m_head = px->m_prev;
-
-            delete px;
+            aux2->next = aux;
         }
     }
+    
 
-    void removeLastOccurrence(T x)
+
+    //insert
+    void insert(T x, int pos)
     {
+        node<T> *aux = new node<T>;
 
-        node<T> *px;
+        aux->data = x;
+        aux->next = NULL;
 
-        px = findLastOccurrence(x);
-
-        if (px != NULL)
+        if (pos == 0)
         {
-            if (px->m_prev != NULL)
-                px->m_prev->m_next = px->m_next;
-
-            if (px->m_next != NULL)
-                px->m_next->m_prev = px->m_prev;
-
-            if (px->m_prev == NULL)
-                m_tail = px->m_next;
-
-            if (px->m_next == NULL)
-                m_head = px->m_prev;
-
-            delete px;
+            aux->next = m_tail;
+            m_tail = aux;
         }
-    }
-
-    list<T>& operator=(const list<T>& l)
-    {
-        node<T> *aux;
-
-        if (this != &l)
+        else
         {
-            while (m_tail != NULL)
-                removeFirst();
+            node<T> *aux2 = m_tail;
 
-            aux = l.m_tail;
+            for (int i = 0; i < pos - 1; i++)
+                aux2 = aux2->next;
 
-            while (aux != NULL)
-            {
-                addLast(aux->m_info);
-                aux = aux->m_next;
-            }
+            aux->next = aux2->next;
+            aux2->next = aux;
         }
-        return *this;
-    }
-
-    bool isEmpty()
-    {
-        return m_tail == NULL;
-    }
-
-    size_t size()
-    {
-        return m_size;
     }
 
     void print()
     {
-        node<T> *aux;
-
-        aux = m_tail;
+        node<T> *aux = m_tail;
 
         while (aux != NULL)
         {
-            std::cout << aux->m_info << " ";
-            aux = aux->m_next;
+            cout << aux->data << " ";
+            aux = aux->next;
         }
-        std::cout << std::endl;
+        cout << "\n";
     }
 
-    node<T>* begin()
+    node<T> *begin()
     {
         return m_tail;
     }
 
-    node<T>* end()
+    node<T> *end()
     {
         return NULL;
     }
-
-    class iterator
-    {
-    private:
-        node<T>* m_ptr;
-
-    public:
-        iterator(node<T>* ptr = NULL): m_ptr(ptr) {}
-
-        iterator& operator++()
-        {
-            m_ptr = m_ptr->m_next;
-            return *this;
-        }
-
-        iterator& operator--()
-        {
-            m_ptr = m_ptr->m_prev;
-            return *this;
-        }
-
-        T& operator*()
-        {
-            return m_ptr->m_info;
-        }
-
-        bool operator==(const iterator& it)
-        {
-            return m_ptr == it.m_ptr;
-        }
-
-        bool operator!=(const iterator& it)
-        {
-            return m_ptr != it.m_ptr;
-        }
-    };
-
-
 };
 
-template<typename T>
-void findIntersection(list<T> &l1, list<T> &l2)
+//find the intersection of two lists
+template <typename T>
+T findIntersection(list<T> &l1, list<T> &l2)
 {
-    for (auto it : l1)
-    {
-        if (l2.findFirstOccurrence(it) != NULL)
-            std::cout << it << " ";
-    }
+    for (auto i = l1.begin(); i != l1.end(); i = i->next)
+        for (auto j = l2.begin(); j != l2.end(); j = j->next)
+        {
+            if (*i == *j)
+                return i->data;
+
+        }
+
+    return "-1";
 }
 }
