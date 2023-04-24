@@ -10,7 +10,6 @@ struct node
     T data;
     node<T> *next;
 
-    //operator overloading ==
     bool operator==(const node<T> &other)
     {
         return data == other.data;
@@ -45,7 +44,6 @@ public:
         return count;
     }
 
-    //insertfront
     void addFirst(T x)
     {
         node<T> *aux = new node<T>;
@@ -55,7 +53,6 @@ public:
         m_tail = aux;
     }
 
-    //insertback
     void addLast(T x)
     {
         node<T> *aux = new node<T>;
@@ -75,10 +72,7 @@ public:
             aux2->next = aux;
         }
     }
-    
 
-
-    //insert
     void insert(T x, int pos)
     {
         node<T> *aux = new node<T>;
@@ -126,7 +120,7 @@ public:
     }
 };
 
-//find the intersection of two lists
+
 template <typename T>
 T findIntersection(list<T> &l1, list<T> &l2)
 {

@@ -1,5 +1,6 @@
 #include "viclist.h"
 #include <string>
+#include <fstream>
 
 using std::cout;
 using std::cin;
@@ -9,24 +10,22 @@ int main()
     vic::list<std::string> l1;
     vic::list<std::string> l2;
 
+    std::ifstream in1("yourPath.in");
+    std::ifstream in2("friendPath.in");
 
-    l1.addFirst("Rome");
-    l1.addFirst("Aquileia");
-    l1.addFirst("Sarmizegetusa");
-    l1.addFirst("Tomis");
-    l1.addFirst("Athens");
-    l1.addFirst("Alexandria");
+    std::string s;
 
+    while (in1 >> s)
+        l1.addLast(s);
 
-    l2.addFirst("a");
-    l2.addFirst("sa");
-    l2.addFirst("ss");
-    l2.addFirst("Nsssa");
-
-
+    while (in2 >> s)
+        l2.addLast(s);
 
     auto inter = vic::findIntersection(l1, l2);
 
-    cout << "Intersection: " << inter;
+    if (inter == "-1")
+        cout << "No intersection found\n";
+    else
+        cout << "The intersection is: " << inter << "\n";
 
 }

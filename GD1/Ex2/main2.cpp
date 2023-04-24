@@ -1,71 +1,70 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
+
+using std::cout;
 
 struct customer
 {
     int t, d;
 };
 
-void queue_sort(std::queue<customer>& q)
-{
-    std::vector<customer> temp;
-    while (!q.empty())
-    {
-        temp.push_back(q.front());
-        q.pop();
-    }
-
-    std::sort(temp.begin(), temp.end(), [](const customer& a, const customer& b) { return a.t < b.t; });
-
-    for (auto& c : temp)
-        q.push(c);
-}
-
-int max_duration(std::queue<customer>& q)
-{
-    int max = 0;
-
-    while (!q.empty())
-    {
-        max += q.front().d;
-        q.pop();
-    }
-
-    return max;
-}
-
-
 int main()
 {   
-    int N, T, total_time = 0;
+    std::ifstream in("data.in");
 
-    std::cout << "Enter N(nombre de clients): ";
-    std::cin >> N;
+    int N, T, total_time = 0, max_time = 0;
+    bool notServed = false;
 
-    std::cout << "Enter T(duree de la journee): ";
-    std::cin >> T;
+    in >> N;
+    in >> T;
 
     std::queue<customer> q;
 
     for (int i = 0; i < N; i++)
     {
         customer c;
-        std::cout << "Enter t(heure d'arrivee): ";
-        std::cin >> c.t;
-        std::cout << "Enter d(duree du service): ";
-        std::cin >> c.d;
+        in >> c.t;
+        in >> c.d;
         q.push(c);
     }
 
-    queue_sort(q);
-    
-    for (int i = 0; i < N; i++)
+    int cnt = 1;
+
+    while (!q.empty())
     {
-        std::cout << "Client: " << i + 1 << ": arrive a " << q.front().t << " l'ordre de prendre: " << q.front().t + q.front().d << " temps reel: " << total_time + q.front().d << std::endl;
-        total_time += q.front().d;
+        customer c = q.front();
         q.pop();
 
+        if (total_time < c.t)
+        {
+            cout << "Attende de" << total_time << " a " << c.t << "\n";
+            total_time = c.t;
+
+        }
+
+        max_time += c.d;
+
+        total_time += c.d;
+
+        if (c.d + c.t > T || total_time > T)
+            cout << "Le client: " << cnt++ << " n'a pas ete servi\n";
+        else
+        {
+            cout << "Le client " << cnt++ <<  ": s'attendait a etre servi a " << c.t + c.d << " heures mais l'a ete a " << total_time << "\n";
+            notServed = true;
+        }
+
     }
+
+    if (!notServed)
+        cout << "Tous les clients servis!\n";
+    else
+        cout << "Certains clients ne sont pas servis!\n";
+
+    cout << "Duree totale des commandes: " << total_time << "\n";
+    cout << "Duree maximale des commandes: " << max_time << "\n";
+
 
 }
