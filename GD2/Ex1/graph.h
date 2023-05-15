@@ -1,64 +1,91 @@
 #include <iostream>
-#include <list>
+#include <vector>
 #include <stack>
- 
-template<typename T>
-class Graph {
+
+class Graph
+{
 private:
-    int V;
-    std::list<T>* adj;
- 
-    void topologicalSortUtil(int v, bool visited[], std::stack<T>& Stack);
- 
+    int num_nodes;
+    std::vector<std::vector<int>> adj_matrix;
+    std::vector<char> nodes;
+
 public:
-    Graph(int V);
- 
-    void addEdge(T v, T w);
-    void topologicalSort();
-};
+    Graph(int num_nodes) : num_nodes(num_nodes), adj_matrix(num_nodes, std::vector<int>(num_nodes, 0)), nodes(num_nodes) {}
 
-template<typename T>
-Graph<T>::Graph(int V)
-{
-    this->V = V;
-    adj = new std::list<T>[V];
-}
-
-template<typename T>
-void Graph<T>::addEdge(T v, T w)
-{
-    adj[v].push_back(w);
-}
-
-template<typename T>
-void Graph<T>::topologicalSortUtil(int v, bool visited[], std::stack<T>& Stack)
-{
-    visited[v] = true;
- 
-    list<T>::iterator i;
-    for (i = adj[v].begin(); i != adj[v].end(); ++i)
-        if (!visited[*i])
-            topologicalSortUtil(*i, visited, Stack);
- 
-    Stack.push(v);
-}
- 
-
-template<typename T>
-void Graph<T>::topologicalSort()
-{
-    std::stack<T> Stack;
- 
-    bool* visited = new bool[V];
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
- 
-    for (int i = 0; i < V; i++)
-        if (visited[i] == false)
-            topologicalSortUtil(i, visited, Stack);
- 
-    while (Stack.empty() == false) {
-        cout << Stack.top() << " ";
-        Stack.pop();
+    void addEdge(char src, char dest)
+    {
+        int src_index = getIndex(src);
+        int dest_index = getIndex(dest);
+        adj_matrix[src_index][dest_index] = 1;
     }
-}
+
+    void addNode(char node)
+    {
+        nodes.push_back(node);
+        num_nodes++;
+        adj_matrix.resize(num_nodes, std::vector<int>(num_nodes, 0));
+        for (int i = 0; i < num_nodes - 1; i++)
+        {
+            adj_matrix[i].resize(num_nodes, 0);
+        }
+    }
+
+    int getIndex(char node)
+    {
+        for (int i = 0; i < num_nodes; i++)
+        {
+            if (nodes[i] == node)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    void topologicalSortUtil(int node, std::vector<bool> &visited, std::stack<char> &st)
+    {
+        visited[node] = true;
+        for (int i = 0; i < num_nodes; i++)
+        {
+            if (adj_matrix[node][i] && !visited[i])
+            {
+                topologicalSortUtil(i, visited, st);
+            }
+        }
+        st.push(nodes[node]);
+    }
+
+    std::vector<char> topologicalSort()
+    {
+        std::vector<bool> visited(num_nodes, false);
+        std::stack<char> st;
+        std::vector<char> sorted;
+
+        for (int i = 0; i < num_nodes; i++)
+        {
+            if (!visited[i])
+            {
+                topologicalSortUtil(i, visited, st);
+            }
+        }
+        while (!st.empty())
+        {
+            sorted.push_back(st.top());
+            st.pop();
+        }
+        return sorted;
+    }
+
+    void print()
+    {
+        for (int i = 0; i < num_nodes; i++)
+        {
+            std::cout << nodes[i] << " ";
+            for (int j = 0; j < num_nodes; j++)
+            {
+                std::cout << adj_matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+};
